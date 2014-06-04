@@ -122,25 +122,31 @@ int setup_dev(struct device *dev, const char *filename)
 	void *p;
 	set_rtprio();
 
-	dev->fd = open(filename, O_RDWR | O_DIRECT | O_SYNC | O_NOATIME);
+	dev->fd = open(filename, O_DIRECT | O_SYNC | O_NOATIME, O_RDWR);
 	if (dev->fd < 0) {
+        printf("Filename: %s\n", filename);
+        printf("Error opening device\n");
 		perror(filename);
 		return -errno;
 	}
 
 	dev->size = lseek(dev->fd, 0, SEEK_END);
 	if (dev->size < 0) {
+        printf("Error obtaining disk size\n");
 		perror("seek");
 		return -errno;
 	}
 
 	err = posix_memalign(&dev->readbuf,		4096, MAX_BUFSIZE);
-	if (err)
+	if (err) {
 		return -err;
+    }
 
 	err = posix_memalign(&p, 4096, MAX_BUFSIZE);
-	if (err)
+	if (err) {
 		return -err;
+    }
+
 	memset(p, 0, MAX_BUFSIZE);
 	dev->writebuf[WBUF_ZERO] = p;
 

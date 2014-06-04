@@ -779,13 +779,12 @@ int main(int argc, char **argv)
     return_val = parse_arguments(argc, argv, &args);
     if (return_val != 0) {
         printf("Error parsing arguments\n");
-        return;
+        return -1;
     }
 
     return_val = setup_dev(&dev, args.dev);
     if (return_val != 0) {
-        printf("Error setting up device\n");
-        return;
+        return -1;
     }
 
 	output = open_output(args.out);
