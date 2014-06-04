@@ -775,9 +775,18 @@ int main(int argc, char **argv)
 	FILE *output;
 	int ret;
 
-	returnif(parse_arguments(argc, argv, &args));
+    int return_val;
+    return_val = parse_arguments(argc, argv, &args);
+    if (return_val != 0) {
+        printf("Error parsing arguments\n");
+        return;
+    }
 
-	returnif(setup_dev(&dev, args.dev));
+    return_val = setup_dev(&dev, args.dev);
+    if (return_val != 0) {
+        printf("Error setting up device\n");
+        return;
+    }
 
 	output = open_output(args.out);
 	if (!output) {
